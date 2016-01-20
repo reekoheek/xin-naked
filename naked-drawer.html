@@ -1,0 +1,131 @@
+<link rel="import" href="../naked/naked.html">
+
+<style>
+  naked-drawer {
+    display: block;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    /*transform: translateX(-100%);*/
+    z-index: 999;
+  }
+
+  naked-drawer.open {
+    display: block;
+    /*transform: translateX(0);*/
+  }
+
+  naked-drawer .overlay,
+  naked-drawer .content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    transition: .3s all;
+    -webkit-transition: .3s all;
+    -moz-transition: .3s all;
+    -o-transition: .3s all;
+    -ms-transition: .3s all;
+  }
+
+  naked-drawer .overlay {
+    background-color: rgba(0, 0, 0, .75);
+    display: block;
+    width: 100%;
+  }
+
+  naked-drawer .content {
+    background-color: #fff;
+    width: 75%;
+
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  }
+
+  naked-drawer .overlay {
+    opacity: 0;
+
+  }
+
+  naked-drawer.show .content {
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+  }
+
+  naked-drawer.show .overlay {
+    opacity: 1;
+  }
+</style>
+
+<template is="xin-template" for="naked-drawer">
+  <div class="overlay" on-click="close"></div>
+  <div class="content">
+    <content></content>
+  </div>
+</template>
+
+<script>
+(function(root) {
+  'use strict';
+
+  xin.Component({
+    is: 'naked-drawer',
+
+    created: function() {
+      this.addEventListener('click', function(evt) {
+        for (var target=evt.target; target && target!=this; target=target.parentNode) {
+          if (xin.Dom(target).is('[close]')) {
+            this.close();
+            break;
+          }
+        }
+      }.bind(this), false);
+    },
+
+    open: function() {
+      this.opened = true;
+
+      this.classList.add('open');
+      setTimeout(function() {
+        this.classList.add('show');
+      }.bind(this));
+    },
+
+    close: function() {
+      this.opened = false;
+
+      var content$ = this.$$('.content');
+
+      var closed = function() {
+        this.classList.remove('open');
+        content$.removeEventListener('transitionend', closed, false);
+        content$.removeEventListener('webkitTransitionEnd', closed, false);
+        content$.removeEventListener('mozTransitionEnd', closed, false);
+        content$.removeEventListener('msTransitionEnd', closed, false);
+        content$.removeEventListener('oTransitionEnd', closed, false);
+      }.bind(this);
+
+      content$.addEventListener('transitionend', closed, false);
+      content$.addEventListener('webkitTransitionEnd', closed, false);
+      content$.addEventListener('mozTransitionEnd', closed, false);
+      content$.addEventListener('msTransitionEnd', closed, false);
+      content$.addEventListener('oTransitionEnd', closed, false);
+
+      this.classList.remove('show');
+    },
+
+    toggle: function() {
+      if (this.opened) {
+        this.close();
+      } else {
+        this.open();
+      }
+    },
+  });
+})(this);
+</script>

@@ -1,0 +1,25 @@
+<link rel="import" href="../naked/naked.html">
+
+<style>
+  naked-navbar {
+    display: block;
+  }
+</style>
+
+<template is="xin-template" for="naked-navbar">
+  <nav class="navbar" style="position: inherit">
+    <div class="row">
+      <content></content>
+    </div>
+  </nav>
+</template>
+
+<script>
+(function(root) {
+  'use strict';
+
+  xin.Component({
+    is: 'naked-navbar',
+  });
+})(this);
+</script>
