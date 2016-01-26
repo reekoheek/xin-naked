@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "naked": "~1.1.7"
+    "naked": "~1.1.7",
+    "jacket-awesome": "~2.0.4"
   }
 }

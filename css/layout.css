@@ -1,0 +1,31 @@
+.full {
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+  height: 100%;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-orient: vertical;
+}
+
+.layout.horizontal {
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-orient: horizontal;
+}
+
+.layout .flex {
+  flex: 1;
+  -webkit-flex: 1;
+  -webkit-box-flex: 1;
+}
+
+.panel {
+  padding: 10px;
+}

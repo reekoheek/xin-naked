@@ -1,0 +1,63 @@
+<style>
+naked-button {
+  cursor: pointer;
+  padding: 8px;
+  display: inline-block;
+}
+</style>
+
+<template is="xin-template" for="naked-button">
+  <a href="#" id="anchor" class="button">
+    <i id="icon"></i> <content></content>
+  </a>
+</template>
+
+<script>
+(function() {
+  'use strict';
+
+  var preventDefaultHandler = function(evt) {
+    evt.preventDefault();
+  };
+
+  xin.Component({
+    is: 'naked-button',
+
+    properties: {
+      icon: {
+        type: String,
+        observer: 'iconChanged'
+      },
+
+      href: {
+        type: String,
+        observer: 'hrefChanged'
+      }
+    },
+
+    ready: function() {
+      this.$.anchor.removeEventListener('click', preventDefaultHandler);
+      if (!this.href) {
+        this.$.anchor.addEventListener('click', preventDefaultHandler);
+      }
+    },
+
+    iconChanged: function(newVal, oldVal) {
+      if (oldVal) {
+        this.$.icon.classList.remove('xn-' + oldVal);
+      }
+      this.$.icon.classList.add('xn-' + (newVal || 'layout'));
+    },
+
+    hrefChanged: function(href) {
+      console.log('href changed');
+      if (href) {
+        this.$.anchor.removeEventListener('click', preventDefaultHandler);
+        this.$.anchor.setAttribute('href', href);
+      } else {
+        this.$.anchor.addEventListener('click', preventDefaultHandler);
+      }
+    }
+  });
+})();
+</script>

@@ -1,0 +1,162 @@
+<style type="text/css">
+.naked-popup-behavior {
+  display: none;
+}
+
+.naked-popup-placeholder {
+  display: none;
+}
+
+.naked-popup-placeholder.opened {
+  display: block;
+}
+
+.naked-popup-placeholder .naked-popup-behavior {
+  display: block;
+}
+
+/*
+ * T-Shirt Popup
+ */
+#popupOverflow { position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; display:block; background:rgba(0, 0, 0, 0.64); }
+#popupOverflow h4 { margin: 0; color: #444; }
+#popupOverflow h4 i { cursor: pointer; font-size: 0.7em; }
+#popupOverflow p { color: #666; }
+#popupOverflow .body-area .row { margin-bottom: 10px; }
+#popupTable { position:fixed; top:0; left:0; display:table; width:100%; height:100%; }
+#popupMargin { display:table-cell; vertical-align:middle; }
+#popupContent { position:relative; display:table; margin:0 auto; padding:0 16px; }
+#popupContent form { padding: 0; }
+#popupContent hr { margin: 0; }
+#popupContent .content {
+  background:#fff;
+  overflow:hidden;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    -ms-border-radius:4px;
+    -o-border-radius:4px;
+    border-radius:4px;
+}
+#popupContent .content.youtube { padding:0; background:#000; }
+#popupContent .content>.wrapper { padding: 20px; }
+#popupContent .content .wrapper { padding: 10px 20px; }
+#popupContent a.close {
+  position:absolute; top:-10px; left:initial; right:6px; background:#fff; color:#000; display:block; padding:0; margin:0; height:24px; width:24px; text-align:center; line-height:24px;
+  -webkit-border-radius:100%;
+  -moz-border-radius:100%;
+  -ms-border-radius:100%;
+  -o-border-radius:100%;
+  border-radius:100%;
+}
+#popupContent a.close:hover { color:#ed2b2b; }
+#popupContent a.close i { font-size:22px; line-height:24px; width:24px; text-align:center; margin: 0; padding: 0; }
+#popupContent p.loading { padding:24px 32px; margin:0; text-align:center; color:#333; }
+#popupContent p.error { padding:24px 32px; margin:0; text-align:center; color:#919191; }
+#popupContent p.error i { margin:24px 0; color:#d03030;  }
+#popupContent .actions { margin:0; padding:0; display:block; border-top:1px solid #ccc; margin:0 -16px -8px  }
+#popupContent .actions li { list-style:none; display:table-cell; padding:0; margin:0 }
+#popupContent .actions a { display:block; text-decoration:none; padding:8px 16px}
+#popupContent .actions a:hover { background:#f5f5f5 }
+#popupContent .actions .primary a { font-weight:bold }
+#popupContent .scrollContent { display: block; overflow: auto; margin: 0; height: 300px; }
+#popupContent .footer-area .button:last-child { margin-right: 0; }
+#popupContent .button-group { width: 100%; display: table; }
+#popupContent .button-group li { display: table-cell; padding: 0; margin: 0; }
+#popupContent .button-group button,
+#popupContent .button-group .button,
+#popupContent .button-group input[type="submit"],
+#popupContent .button-group input[type="reset"] {
+  font-size: 1.1em; display: block; margin: 0; line-height: 48px; padding: 0; width: 100%; border: 1px solid #e7e7e7; border-left: none; border-bottom: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+}
+#popupContent .button-group li:last-child .button { border-right: 0; }
+
+/*================================*/
+/*========== RESPONSIVE ==========*/
+/*================================*/
+@media only screen and (max-width:767px) {
+  #popupContent .content { width:auto!important }
+}
+
+@media only screen and (min-width:767px) {
+  #popupContent { padding:0 }
+  #popupContent a.close { right:-10px }
+  #popupContent p.error { padding:32px 48px }
+}
+</style>
+
+<template is="xin-template" for="--naked-popup-behavior">
+<div class="naked-popup-placeholder">
+  <div id="popupOverflow">
+    <div id="popupTable">
+      <div id="popupMargin">
+        <div id="popupContent">
+          <div class="content" id="popupContainer"></div>
+          <a href="#" class="close"><i class="xn xn-cancel" id="popupCloseHandle"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+
+<script>
+(function() {
+  'use strict';
+
+  var placeholder;
+
+  var getPlaceholder = function() {
+    if (!placeholder) {
+      placeholder = document.importNode(xin.templates['--naked-popup-behavior'].content, true).children[0];
+      placeholder.container = placeholder.querySelector('#popupContainer');
+      var popupMargin = placeholder.querySelector('#popupMargin');
+      var popupCloseHandle = placeholder.querySelector('#popupCloseHandle');
+      placeholder.addEventListener('click', function(evt) {
+        if (evt.target === popupMargin || evt.target === popupCloseHandle) {
+          evt.preventDefault();
+          evt.stopImmediatePropagation();
+          placeholder.close();
+        }
+      });
+      placeholder.open = function(element) {
+        this.active = element;
+        this.container.appendChild(element);
+        this.classList.add('opened');
+      };
+      placeholder.close = function() {
+        if (this.active) {
+          this.container.removeChild(this.active);
+          document.body.appendChild(this.active);
+        }
+        this.active = null;
+        this.classList.remove('opened');
+      };
+      document.body.appendChild(placeholder);
+    }
+
+    return placeholder;
+  };
+
+  var PopupBehaviorImpl = {
+    created: function() {
+      this.classList.add('naked-popup-behavior');
+    },
+
+    open: function() {
+      getPlaceholder().open(this);
+    },
+
+    close: function() {
+      getPlaceholder().close();
+    }
+  };
+
+  xin.naked = xin.naked || {};
+  xin.naked.PopupBehavior = PopupBehaviorImpl;
+})();
+</script>
