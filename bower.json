@@ -16,7 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "naked": "~1.1.7",
+    "naked": "xinix-technology/naked#master",
     "jacket-awesome": "~2.0.4"
   }
 }
