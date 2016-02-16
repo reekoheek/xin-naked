@@ -1,0 +1,104 @@
+<style>
+naked-select-file #fileSelector {
+  display: none;
+}
+
+naked-select-file.layout-simple .hide-simple,
+naked-select-file.layout-standard .hide-standard {
+  display: none;
+}
+
+naked-select-file .inline {
+  display: inline;
+}
+</style>
+
+<template is="xin-template" for="naked-select-file">
+  <div class="hide-standard inline">
+        <a class="button solid" on-click="openDialog">[[label]]</a>
+  </div>
+
+  <div class="hide-simple">
+    <div class="input-button layout horizontal">
+      <div class="flex">
+        <input type="text" placeholder="Select file..." value="{{value}}">
+      </div>
+      <div>
+        <a class="button solid" on-click="openDialog">[[label]]</a>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="fileSelector" on-change="fileChanged">
+</template>
+
+<script>
+(function() {
+  'use strict';
+
+  xin.Component({
+    is: 'naked-select-file',
+
+    properties: {
+      value: {
+        type: String,
+        notify: true,
+      },
+
+      type: {
+        type: String,
+        value: 'file',
+        observer: 'typeChanged',
+      },
+
+      files: {
+        type: Array,
+        value: [],
+      },
+
+      layout: {
+        type: String,
+        value: 'standard',
+      },
+
+      label: {
+        type: String,
+        value: 'Select'
+      }
+    },
+
+    created: function() {
+      this.set('label', this.textContent);
+    },
+
+    ready: function() {
+      if (this.layout) {
+        this.classList.add('layout-' + this.layout);
+      }
+    },
+
+    openDialog: function() {
+      xin.Dom(this.$.fileSelector).fire('click');
+    },
+
+    typeChanged: function(newVal, oldVal) {
+      this.$.fileSelector.removeAttribute('nwdirectory');
+      if (newVal === 'dir') {
+        this.$.fileSelector.setAttribute('nwdirectory', 'nwdirectory');
+      }
+    },
+
+    fileChanged: function(evt) {
+      evt.preventDefault();
+      evt.stopImmediatePropagation();
+
+      if (this.$.fileSelector.files.length === 1) {
+        this.set('value', this.$.fileSelector.files[0].path);
+      }
+
+      this.files = this.$.fileSelector.files;
+      this.fire('change');
+    }
+  });
+})();
+</script>

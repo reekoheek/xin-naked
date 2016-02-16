@@ -1,4 +1,8 @@
-.full {
+html.app, html.app body {
+  height: 100%;
+}
+
+html.app body {
   padding: 0;
   margin: 0;
 }
@@ -28,4 +32,8 @@
 
 .panel {
   padding: 10px;
+}
+
+.scroll {
+  overflow: auto;
 }
