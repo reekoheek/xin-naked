@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
+    "xin": "xinix-technology/xin#ver-2.x",
     "naked": "xinix-technology/naked#master",
     "jacket-awesome": "~2.0.4"
   }
